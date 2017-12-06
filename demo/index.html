@@ -2,12 +2,59 @@
 <html>
 <head>
   <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+  <link rel="import" href="../../polymer/polymer-element.html">
   <link rel="import" href="../yt-iframe-player.html">
 </head>
 <body>
-  <yt-iframe-player video-id="cuoZenpQveQ"></yt-iframe-player>
-  <yt-iframe-player 
-    player-vars='{"list": "PLNYkxOF6rcIDP0PqVaJxqNWwIgvoEPzJi", "listType": "playlist"}'>
-  </yt-iframe-player>
+  <dom-module id="demo-element">
+    <template>
+      <yt-iframe-player
+        on-ready="_handleReady"
+        on-state-change="_handleStateChange"
+        on-playback-quality-change="_handlePlaybackQualityChange"
+        on-playback-rate-change="_handlePlaybackRateChange"
+        on-error="_handleError"
+        on-api-change="_handleAPIChange"
+        video-id="cuoZenpQveQ"></yt-iframe-player>
+      <yt-iframe-player 
+        player-vars='{"list": "PLNYkxOF6rcIDP0PqVaJxqNWwIgvoEPzJi", "listType": "playlist"}'>
+    </template>
+
+    <script>
+      HTMLImports.whenReady(function() {
+        class DemoElement extends Polymer.Element {
+          static get is() {
+            return 'demo-element';
+          }
+
+          _handleReady(event) {
+            console.log('Player ready');
+          }
+
+          _handleStateChange(event) {
+            console.log('Player state changed to ' + event.detail.data);
+          }
+
+          _handlePlaybackQualityChange(event) {
+            console.log('Player playback quality changed to ' + event.detail.data);
+          }
+
+          _handlePlaybackRateChange(event) {
+            console.log('Player playback rate changed to ' + event.detail.data);
+          }
+
+          _handleError(event) {
+            console.log('Player error occured; type of error: ' + event.detail.data);
+          }
+
+          _handleAPIChange(event) {
+            console.log('Player API changed');
+          }
+        }
+        window.customElements.define(DemoElement.is, DemoElement);
+      });
+    </script>
+  </dom-module>
+  <demo-element></demo-element>  
 </body>
 </html>

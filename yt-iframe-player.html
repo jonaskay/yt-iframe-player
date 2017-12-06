@@ -23,13 +23,13 @@
           playerVars: Object,
           playerOptions: {
             type: Object,
-            computed: '_computePlayerOptions("width", "height", "videoId", "playerVars")'
+            computed: '_computePlayerOptions()'
           }
         }
       }
 
-      _computePlayerOptions(width, height, videoId, playerVars) {
-        const options = [width, height, videoId, playerVars]
+      _computePlayerOptions() {
+        const options = ['width', 'height', 'videoId', 'playerVars']
         const reducer = (properties, key) => {
           if (this[key]) {
             properties[key] = this[key]
@@ -37,7 +37,16 @@
           return properties;
         }
 
-        return (options.reduce(reducer.bind(this), {}))
+        return (options.reduce(reducer.bind(this), {
+          events: {
+            'onReady': this._onPlayerReady.bind(this),
+            'onStateChange': this._onPlayerStateChange.bind(this),
+            'onPlaybackQualityChange': this._onPlayerPlaybackQualityChange.bind(this),
+            'onPlaybackRateChange': this._onPlayerPlaybackRateChange.bind(this),
+            'onError': this._onPlayerError.bind(this),
+            'onApiChange': this._onPlayerAPIChange.bind(this)
+          }
+        }))
       }
 
       _handleAPILoad(event) {
@@ -47,6 +56,34 @@
       _constructYTPlayer(api) {
         this.player = new api.Player(this.$.player, this.playerOptions);
       }
+
+      _onPlayerReady(event) {
+        this._notifyCallback('ready', event)
+      }
+
+      _onPlayerStateChange(event) {
+        this._notifyCallback('state-change', event)
+      }
+
+      _onPlayerPlaybackQualityChange(event) {
+        this._notifyCallback('playback-quality-change', event)
+      }
+
+      _onPlayerPlaybackRateChange(event) {
+        this._notifyCallback('playback-rate-change', event)
+      }
+
+      _onPlayerError(event) {
+        this._notifyCallback('error', event)
+      }
+
+      _onPlayerAPIChange(event) {
+        this._notifyCallback('api-change', event)
+      }
+
+      _notifyCallback(name, event) {
+        this.dispatchEvent(new CustomEvent(name, { bubbles: true, composed: true, detail: event }))
+      }      
     }
 
     customElements.define(YTIFramePlayer.is, YTIFramePlayer);
