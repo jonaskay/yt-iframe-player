@@ -1,1 +1,55 @@
 <link rel="import" href="bower_components/polymer/polymer-element.html">
+<link rel="import" href="bower_components/yt-iframe-api/yt-iframe-api.html">
+
+<dom-module id="yt-iframe-player">
+
+  <template>
+    <yt-iframe-api id="api" on-api-load="_handleAPILoad"></yt-iframe-api>
+    <div id="player"></div>
+  </template>
+
+  <script>
+    class YTIFramePlayer extends Polymer.Element {
+      static get is() {
+        return 'yt-iframe-player';
+      }
+
+      static get properties() {
+        return {
+          player: Object,
+          width: Number,
+          height: Number,
+          videoId: String,
+          playerVars: Object,
+          playerOptions: {
+            type: Object,
+            computed: '_computePlayerOptions("width", "height", "videoId", "playerVars")'
+          }
+        }
+      }
+
+      _computePlayerOptions(width, height, videoId, playerVars) {
+        const options = [width, height, videoId, playerVars]
+        const reducer = (properties, key) => {
+          if (this[key]) {
+            properties[key] = this[key]
+          }
+          return properties;
+        }
+
+        return (options.reduce(reducer.bind(this), {}))
+      }
+
+      _handleAPILoad(event) {
+        this._constructYTPlayer(event.target.api);
+      }
+
+      _constructYTPlayer(api) {
+        this.player = new api.Player(this.$.player, this.playerOptions);
+      }
+    }
+
+    customElements.define(YTIFramePlayer.is, YTIFramePlayer);
+  </script>
+
+</dom-module>
