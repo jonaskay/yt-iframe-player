@@ -4,7 +4,10 @@
 <dom-module id="yt-iframe-player">
 
   <template>
-    <yt-iframe-api id="api" on-api-load="_handleAPILoad"></yt-iframe-api>
+    <yt-iframe-api
+      id="api"
+      on-api-load="_handleAPILoad"
+      on-api-error="_handleAPIError"></yt-iframe-api>
     <div id="player"></div>
   </template>
 
@@ -50,7 +53,12 @@
       }
 
       _handleAPILoad(event) {
+        this._notifyCallback('iframe-api-load', event)
         this._constructYTPlayer(event.target.api);
+      }
+
+      _handleAPIError(event) {
+        this._notifyCallback('iframe-api-error', event)
       }
 
       _constructYTPlayer(api) {

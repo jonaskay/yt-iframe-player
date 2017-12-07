@@ -15,6 +15,8 @@
         on-playback-rate-change="_handlePlaybackRateChange"
         on-error="_handleError"
         on-api-change="_handleAPIChange"
+        on-iframe-api-load="_handleIFrameAPILoad"
+        on-iframe-api-error="_handleIFrameAPIError"
         video-id="cuoZenpQveQ"></yt-iframe-player>
       <yt-iframe-player 
         player-vars='{"list": "PLNYkxOF6rcIDP0PqVaJxqNWwIgvoEPzJi", "listType": "playlist"}'>
@@ -49,6 +51,14 @@
 
           _handleAPIChange(event) {
             console.log('Player API changed');
+          }
+
+          _handleIFrameAPILoad(event) {
+            console.log('IFrame Player API loaded');
+          }
+
+          _handleIFrameAPIError(event) {
+            console.log('IFrame Player API error');
           }
         }
         window.customElements.define(DemoElement.is, DemoElement);
