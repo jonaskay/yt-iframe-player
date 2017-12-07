@@ -15,7 +15,10 @@
     "tests"
   ],
   "dependencies": {
-    "polymer": "Polymer/polymer#2.0.0",
+    "polymer": "Polymer/polymer#^2.0.0",
     "yt-iframe-api": "*"
+  },
+  "resolutions": {
+    "polymer": "^2.0.0"
   }
 }
